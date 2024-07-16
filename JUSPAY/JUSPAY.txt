@@ -1,0 +1,121 @@
+1) MAX CYCLE LENGTH:
+
+SOLN:
+class Solution {
+    int result = -1;
+
+    public int longestCycle(int[] edges) {
+        boolean[] visited = new boolean[edges.length];
+        boolean[] inStack = new boolean[edges.length]; // Track nodes in the current DFS path
+        int[] discover = new int[edges.length];
+
+        for (int i = 0; i < edges.length; i++) {
+            if (!visited[i]) {
+                dfs(edges, i, visited, inStack, discover, 1);
+            }
+        }
+        return result;
+    }
+
+    public void dfs(int[] edges, int i, boolean[] visited, boolean[] inStack, int[] discover, int time) {
+        visited[i] = true;
+        inStack[i] = true;  // Mark as part of the current path
+        discover[i] = time;
+
+        int next = edges[i];
+        if (next != -1) {
+            if (inStack[next]) {  // Cycle detected
+                int cycleLength = time - discover[next] + 1;
+                result = Math.max(result, cycleLength);
+            } else if (!visited[next]) {  // Continue DFS if next node is not visited
+                dfs(edges, next, visited, inStack, discover, time + 1);
+            }
+        }
+
+        // Backtracking
+        inStack[i] = false;  // Unmark current node from the current path
+        discover[i] = 0;     // Reset discovery time for backtracking (optional)
+    }
+}
+
+________________________________________________________________________________________________________________________________________________________________________________________________
+
+2) MAX NODE WEIGHT:
+
+SOLN:
+
+class Solution{
+    public int maxWeightCell(int N, int Edge[]){
+       int []wt=new int[N];
+       for(int i=0;i<N;i++)
+       {
+           if(Edge[i]!=-1)
+            wt[Edge[i]]+=i;
+       }
+       int max=0;
+       int edge=-1;
+       for(int i=0;i<N;i++)
+       {
+           if(wt[i]>=max)
+           {
+            max=wt[i];
+            edge=i;
+           }
+       }
+       return edge;
+    }
+}
+
+_______________________________________________________________________________________________________________________________________________________________________________________________________
+
+3) NEAREST MEETING CELL
+
+SOLN:
+import java.util.*;
+public class Nearest {
+    public static void main(String [] args)
+    {
+        int []edges={4 ,4, 1, 4, 13, 8, 8, 8, 0, 8, 14, 9, 15, 11, -1, 10, 15, 22, 22, 22, 22, 22, 21};
+        int c1=0;
+        int c2=4;
+        List <Integer> st1=bfs(edges,c1);
+        System.out.println(st1);
+        List <Integer> st2=bfs(edges,c2);
+        System.out.println(st2);
+        int min=Integer. MAX_VALUE;
+        int ans=-1;
+        for (Integer node : st1) {
+            if (st2.contains(node)) {
+                int i=st1.indexOf(node);
+                int j=st2.indexOf(node);
+                int dis=Math.abs(i-j);
+                System.out.println(dis);
+                if(dis<min)
+                {
+                    min=dis;
+                    ans=node;
+                }
+            }
+        }
+         System.out.println("First common reachable node from " + c1 + " and " + c2 + ": " 
+                + ans);
+    }
+    public static List<Integer> bfs(int[] edges,int start)
+    {
+        List<Integer> st=new ArrayList<>();
+        Queue<Integer> q=new LinkedList<>();
+        q.add(start);
+        while(!q.isEmpty())
+        {
+            int i=q.poll();
+            if(i!=-1)
+            {
+            st.add(i);
+            int next=edges[i];
+            if(next!=-1 && !st.contains(next))
+            q.add(next);
+            }
+        }
+        return st;
+    }
+}
